@@ -1,0 +1,77 @@
+package main
+
+import (
+	"encoding/xml"
+)
+
+type RSS struct {
+	XMLName xml.Name `xml:"rss">"channel"`
+	Title   string   `xml:"channel>title"`
+	Items   []Item   `xml:"channel>item"`
+}
+
+type Item struct {
+	XMLName     xml.Name `xml:"item"`
+	Title       string   `xml:"title"`
+	Link        string   `xml:"link"`
+	Description string   `xml:"description"`
+	Categories  []string `xml:"category"`
+}
+
+func (x *RSS) GetArticles() []Article {
+	articles := make([]Article, 0, len(x.Items))
+	for _, e := range x.Items {
+		articles = append(articles, Article{
+			Title:  e.Title,
+			Link:   e.Link,
+			Topics: e.Categories,
+		})
+	}
+	return articles
+}
+
+type Atom struct {
+	XMLName xml.Name `xml:"feed"`
+	Title   string   `xml:"title"`
+	Entries []Entry  `xml:"entry"`
+}
+
+type Entry struct {
+	XMLName    xml.Name   `xml:"entry"`
+	Title      string     `xml:"title"`
+	Content    string     `xml:"content"`
+	Link       Link       `xml:"link"`
+	Summary    string     `xml:"summary"`
+	Categories []Category `xml:"category"`
+}
+
+type Link struct {
+	Href string `xml:"href,attr"`
+}
+
+type Category struct {
+	Term string `xml:"term,attr"`
+}
+
+type Raw struct {
+	Raw string `xml:",innerxml"`
+}
+
+func (x *Atom) GetArticles() []Article {
+	articles := make([]Article, 0, len(x.Entries))
+	for _, e := range x.Entries {
+		categories := make([]string, 0, len(e.Categories))
+		for _, c := range e.Categories {
+			if "" == c.Term {
+				continue
+			}
+			categories = append(categories, c.Term)
+		}
+		articles = append(articles, Article{
+			Title:  e.Title,
+			Link:   e.Link.Href,
+			Topics: categories,
+		})
+	}
+	return articles
+}
