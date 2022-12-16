@@ -2,18 +2,44 @@ package main
 
 import (
 	"context"
+	"strings"
 )
 
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	out := ConsolePrinter{}
-	result := getSources(ctx, out)
+	printer := ConsolePrinter{}
+	result := getSources(ctx, printer)
 
-	for idx, r := range result {
-		out.Debug("%d) %q posts: %d", idx+1, r.Title, len(r.Articles))
+	var out strings.Builder
+	for _, r := range result {
+		for _, src := range r.Articles {
+			// out.Grow(len(src.Title) + len(src.Link) + len(src.Brief) + 7)
+			out.WriteByte('[')
+			out.WriteString(src.Title)
+			out.WriteByte(']')
+			out.WriteByte('(')
+			out.WriteString(src.Link)
+			out.WriteByte(')')
+
+			if len(src.Topics) > 0 {
+				topics := strings.Join(src.Topics, ":")
+				// out.Grow(len(topics) + 3)
+				out.WriteByte(' ')
+				out.WriteByte(':')
+				out.WriteString(topics)
+				out.WriteByte(':')
+			}
+			out.WriteByte('\n')
+
+			out.WriteString(src.Brief)
+			out.WriteByte('\n')
+
+			out.WriteByte('\n')
+		}
 	}
+	printer.Debug(out.String())
 }
 
 func getSources(ctx context.Context, out Printer) []*Source {
