@@ -16,6 +16,7 @@ type Item struct {
 	Link        string   `xml:"link"`
 	Description string   `xml:"description"`
 	Categories  []string `xml:"category"`
+	PubDate     string   `xml:"pubDate"`
 }
 
 func (e *Item) GetCategories() []string {
@@ -37,6 +38,7 @@ func (x *RSS) GetArticles() []Article {
 			Link:   e.Link,
 			Topics: e.GetCategories(),
 			Brief:  stripHtmlTags(e.Description),
+			Date:   ParseDate(e.PubDate),
 		})
 	}
 	return articles
@@ -54,6 +56,7 @@ type Entry struct {
 	Content    string     `xml:"content"`
 	Link       Link       `xml:"link"`
 	Summary    string     `xml:"summary"`
+	Published  string     `xml:"published"`
 	Categories []Category `xml:"category"`
 }
 
@@ -77,6 +80,7 @@ func (x *Atom) GetArticles() []Article {
 			Link:   e.Link.Href,
 			Topics: e.GetCategories(),
 			Brief:  e.GetBrief(),
+			Date:   ParseDate(e.Published),
 		})
 	}
 	return articles

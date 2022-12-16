@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 )
 
 func Test_parse_Atom(t *testing.T) {
@@ -71,6 +72,10 @@ func validateArticle(a Article, t *testing.T) {
 	if strings.Contains(a.Brief, "<") && strings.Contains(a.Brief, ">") {
 		t.Error("brief should not contain tags")
 		t.Log(a.Title, "\n", a.Brief, "\n")
+	}
+
+	if !a.Date.ts.Before(time.Now().Add(-48 * time.Hour)) {
+		t.Errorf("expected valid date: %q", a.Date.String())
 	}
 }
 

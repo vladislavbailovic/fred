@@ -19,6 +19,7 @@ type Source struct {
 
 type Article struct {
 	Title  string
+	Date   Date
 	Link   string
 	Brief  string
 	Topics []string
