@@ -17,9 +17,6 @@ func Test_parse_Atom(t *testing.T) {
 	if err := source.parse(buffer); err != nil {
 		t.Error(err)
 	}
-	if source.Title == "" {
-		t.Error("expected proper title")
-	}
 	if len(source.Articles) != 10 {
 		t.Errorf("invalid articles count: %d", len(source.Articles))
 	}
@@ -35,9 +32,6 @@ func Test_parse_RSS(t *testing.T) {
 
 	if err := source.parse(buffer); err != nil {
 		t.Error(err)
-	}
-	if source.Title == "" {
-		t.Error("expected proper title")
 	}
 	if len(source.Articles) != 20 {
 		t.Errorf("invalid articles count: %d", len(source.Articles))
@@ -74,8 +68,15 @@ func validateArticle(a Article, t *testing.T) {
 		t.Log(a.Title, "\n", a.Brief, "\n")
 	}
 
-	if !a.Date.ts.Before(time.Now().Add(-48 * time.Hour)) {
+	if !a.Date.ts.Before(time.Now().Add(-24 * time.Hour)) {
 		t.Errorf("expected valid date: %q", a.Date.String())
+	}
+
+	if a.Origin.Title == "" {
+		t.Error("expected origin title")
+	}
+	if a.Origin.Link == nil {
+		t.Error("expected origin URL")
 	}
 }
 

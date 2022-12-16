@@ -2,11 +2,13 @@ package main
 
 import (
 	"encoding/xml"
+	"net/url"
 )
 
 type RSS struct {
 	XMLName xml.Name `xml:"rss">"channel"`
 	Title   string   `xml:"channel>title"`
+	Link    string   `xml:"channel>link"`
 	Items   []Item   `xml:"channel>item"`
 }
 
@@ -31,6 +33,10 @@ func (e *Item) GetCategories() []string {
 }
 
 func (x *RSS) GetArticles() []Article {
+	origin := Origin{Title: x.Title}
+	if lnk, err := url.Parse(x.Link); err == nil {
+		origin.Link = lnk
+	}
 	articles := make([]Article, 0, len(x.Items))
 	for _, e := range x.Items {
 		articles = append(articles, Article{
@@ -39,6 +45,7 @@ func (x *RSS) GetArticles() []Article {
 			Topics: e.GetCategories(),
 			Brief:  stripHtmlTags(e.Description),
 			Date:   ParseDate(e.PubDate),
+			Origin: origin,
 		})
 	}
 	return articles
@@ -47,6 +54,7 @@ func (x *RSS) GetArticles() []Article {
 type Atom struct {
 	XMLName xml.Name `xml:"feed"`
 	Title   string   `xml:"title"`
+	Link    Link     `xml:"link"`
 	Entries []Entry  `xml:"entry"`
 }
 
@@ -73,6 +81,10 @@ type Raw struct {
 }
 
 func (x *Atom) GetArticles() []Article {
+	origin := Origin{Title: x.Title}
+	if lnk, err := url.Parse(x.Link.Href); err == nil {
+		origin.Link = lnk
+	}
 	articles := make([]Article, 0, len(x.Entries))
 	for _, e := range x.Entries {
 		articles = append(articles, Article{
@@ -81,6 +93,7 @@ func (x *Atom) GetArticles() []Article {
 			Topics: e.GetCategories(),
 			Brief:  e.GetBrief(),
 			Date:   ParseDate(e.Published),
+			Origin: origin,
 		})
 	}
 	return articles

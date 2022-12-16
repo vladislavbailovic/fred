@@ -13,16 +13,7 @@ var RequestTimeout time.Duration = 5
 
 type Source struct {
 	URL      *url.URL
-	Title    string
 	Articles []Article
-}
-
-type Article struct {
-	Title  string
-	Date   Date
-	Link   string
-	Brief  string
-	Topics []string
 }
 
 func NewSource(rawUrl string, out Printer) *Source {
@@ -75,11 +66,9 @@ func (x *Source) parse(buffer []byte) error {
 		if atomErr := xml.Unmarshal(buffer, &f); atomErr != nil {
 			return atomErr
 		} else {
-			x.Title = f.Title
 			x.Articles = f.GetArticles()
 		}
 	} else {
-		x.Title = r.Title
 		x.Articles = r.GetArticles()
 	}
 
