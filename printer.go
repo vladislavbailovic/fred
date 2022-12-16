@@ -5,6 +5,8 @@ import (
 	"os"
 )
 
+var PrintDebug bool = true
+
 type Printer interface {
 	Error(error, string, ...interface{})
 	Debug(string, ...interface{})
@@ -18,6 +20,9 @@ func (x ConsolePrinter) Error(err error, msg string, rest ...interface{}) {
 }
 
 func (x ConsolePrinter) Debug(msg string, rest ...interface{}) {
+	if !PrintDebug {
+		return
+	}
 	fmt.Fprintf(os.Stdout, "[DEBUG]:\n\t%s\n",
 		fmt.Sprintf(msg, rest...))
 }

@@ -9,13 +9,17 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	printer := ConsolePrinter{}
-	result := getSources(ctx, printer)
+	out := ConsolePrinter{}
+	result := getSources(ctx, out)
 
+	render(result, out)
+}
+
+func render(result []*Source, printer Printer) {
 	var out strings.Builder
 	for _, r := range result {
 		for _, src := range r.Articles {
-			// out.Grow(len(src.Title) + len(src.Link) + len(src.Brief) + 7)
+			out.Grow(len(src.Title) + len(src.Link) + len(src.Brief) + 7)
 			out.WriteByte('[')
 			out.WriteString(src.Title)
 			out.WriteByte(']')
@@ -25,7 +29,7 @@ func main() {
 
 			if len(src.Topics) > 0 {
 				topics := strings.Join(src.Topics, ":")
-				// out.Grow(len(topics) + 3)
+				out.Grow(len(topics) + 3)
 				out.WriteByte(' ')
 				out.WriteByte(':')
 				out.WriteString(topics)
