@@ -11,7 +11,7 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	out := internal.ConsolePrinter{}
+	out := NullPrinter{}
 	result := getSources(ctx, out)
 
 	render(result, out)
@@ -76,10 +76,9 @@ func getSources(ctx context.Context, out internal.Printer) []*feed.Source {
 }
 
 func getSource(ctx context.Context, raw string, resp chan *feed.Source, out internal.Printer) {
-	printer := internal.ConsolePrinter{}
-	src := feed.NewSource(raw, printer)
+	src := feed.NewSource(raw, out)
 	if src != nil { // can be nil pointer
-		src.Load(ctx, printer)
+		src.Load(ctx, out)
 	}
 	resp <- src
 }
@@ -99,4 +98,14 @@ var urls []string = []string{
 	// "https://research.swtch.com/feed.atom",
 	// "https://scene-si.org/index.xml",
 	// "https://utcc.utoronto.ca/~cks/space/blog/?atom",
+}
+
+type NullPrinter struct{}
+
+func (x NullPrinter) Error(err error, msg string, rest ...interface{}) {
+	return
+}
+
+func (x NullPrinter) Debug(msg string, rest ...interface{}) {
+	return
 }

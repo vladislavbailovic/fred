@@ -12,14 +12,15 @@ func Benchmark_Render(b *testing.B) {
 		&feed.Source{},
 		&feed.Source{},
 	}
-	out := &internal.ConsolePrinter{}
-	internal.PrintDebug = false
+	out := &ConsolePrinter{}
+	PrintDebug = false
 
 	sources[0].Parse(internal.GetTestFile("atom.xml"))
 	sources[1].Parse(internal.GetTestFile("rss.xml"))
 
 	for i := 0; i < b.N; i++ {
-		render(sources, out)
+		renderSource(sources[0], out)
+		renderSource(sources[1], out)
 	}
 }
 
