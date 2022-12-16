@@ -60,3 +60,18 @@ func Test_stripHtmlTags(t *testing.T) {
 		})
 	}
 }
+
+func Test_sanitizeCategory(t *testing.T) {
+	suite := map[string]string{
+		"AWS Lambda": "aws-lambda",
+		"test-test":  "test-test",
+	}
+	for test, expected := range suite {
+		t.Run(test, func(t *testing.T) {
+			actual := sanitizeCategory(test)
+			if actual != expected {
+				t.Errorf("expected %q, got %q", expected, actual)
+			}
+		})
+	}
+}

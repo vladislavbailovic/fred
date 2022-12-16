@@ -1,6 +1,9 @@
 package main
 
-import "strings"
+import (
+	"strings"
+	"unicode"
+)
 
 /// According to https://developer.mozilla.org/en-US/docs/Web/HTML/Block-level_elements
 var blockLevelTags []string = []string{
@@ -60,4 +63,14 @@ func stripHtmlTags(raw string) string {
 	}
 
 	return out.String()
+}
+
+func sanitizeCategory(raw string) string {
+	return strings.ToLower(
+		strings.Map(func(r rune) rune {
+			if unicode.IsLetter(r) || unicode.IsNumber(r) || '-' == r {
+				return r
+			}
+			return '-'
+		}, raw))
 }

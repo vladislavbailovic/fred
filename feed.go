@@ -18,13 +18,24 @@ type Item struct {
 	Categories  []string `xml:"category"`
 }
 
+func (e *Item) GetCategories() []string {
+	categories := make([]string, 0, len(e.Categories))
+	for _, c := range e.Categories {
+		if "" == c {
+			continue
+		}
+		categories = append(categories, sanitizeCategory(c))
+	}
+	return categories
+}
+
 func (x *RSS) GetArticles() []Article {
 	articles := make([]Article, 0, len(x.Items))
 	for _, e := range x.Items {
 		articles = append(articles, Article{
 			Title:  e.Title,
 			Link:   e.Link,
-			Topics: e.Categories,
+			Topics: e.GetCategories(),
 			Brief:  stripHtmlTags(e.Description),
 		})
 	}
@@ -77,7 +88,7 @@ func (e *Entry) GetCategories() []string {
 		if "" == c.Term {
 			continue
 		}
-		categories = append(categories, c.Term)
+		categories = append(categories, sanitizeCategory(c.Term))
 	}
 	return categories
 }
