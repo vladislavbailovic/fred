@@ -5,6 +5,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -50,6 +51,7 @@ func validateArticle(a Article, t *testing.T) {
 	if a.Title == "" {
 		t.Error("expected article to have a title")
 	}
+
 	if a.Link == "" {
 		t.Error("expected article to have a link")
 	}
@@ -58,8 +60,17 @@ func validateArticle(a Article, t *testing.T) {
 	} else if lnk.String() != a.Link {
 		t.Errorf("article URL: expected %q, got %q", a.Link, lnk.String())
 	}
+
 	if len(a.Topics) == 0 {
 		t.Error("expected article topics")
+	}
+
+	if a.Brief == "" {
+		t.Error("expected brief")
+	}
+	if strings.Contains(a.Brief, "<") && strings.Contains(a.Brief, ">") {
+		t.Error("brief should not contain tags")
+		t.Log(a.Title, "\n", a.Brief, "\n")
 	}
 }
 

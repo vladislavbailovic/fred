@@ -25,6 +25,7 @@ func (x *RSS) GetArticles() []Article {
 			Title:  e.Title,
 			Link:   e.Link,
 			Topics: e.Categories,
+			Brief:  stripHtmlTags(e.Description),
 		})
 	}
 	return articles
@@ -60,18 +61,33 @@ type Raw struct {
 func (x *Atom) GetArticles() []Article {
 	articles := make([]Article, 0, len(x.Entries))
 	for _, e := range x.Entries {
-		categories := make([]string, 0, len(e.Categories))
-		for _, c := range e.Categories {
-			if "" == c.Term {
-				continue
-			}
-			categories = append(categories, c.Term)
-		}
 		articles = append(articles, Article{
 			Title:  e.Title,
 			Link:   e.Link.Href,
-			Topics: categories,
+			Topics: e.GetCategories(),
+			Brief:  e.GetBrief(),
 		})
 	}
 	return articles
+}
+
+func (e *Entry) GetCategories() []string {
+	categories := make([]string, 0, len(e.Categories))
+	for _, c := range e.Categories {
+		if "" == c.Term {
+			continue
+		}
+		categories = append(categories, c.Term)
+	}
+	return categories
+}
+
+func (e *Entry) GetBrief() string {
+	var brief string
+	if e.Summary != "" {
+		brief = e.Summary
+	} else {
+		brief = e.Content
+	}
+	return stripHtmlTags(brief)
 }

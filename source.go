@@ -20,6 +20,7 @@ type Source struct {
 type Article struct {
 	Title  string
 	Link   string
+	Brief  string
 	Topics []string
 }
 

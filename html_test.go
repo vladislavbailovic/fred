@@ -28,3 +28,35 @@ func Test_isBlockTag(t *testing.T) {
 		})
 	}
 }
+
+func Test_stripHtmlTags(t *testing.T) {
+	suite := map[string]struct {
+		test string
+		want string
+	}{
+		"no tags": {
+			test: "whatever this is a test",
+			want: "whatever this is a test",
+		},
+		"random angle braces": {
+			test: "whatever > this < is >> a << test",
+			want: "whatever  this  a ",
+		},
+		"inline tags": {
+			test: "<b>whatever</b>! <i>New stuff here</i>",
+			want: "whatever! New stuff here",
+		},
+		"block level tags": {
+			test: "<p>paragraph1</p><p>paragraph2</p>",
+			want: "paragraph1paragraph2",
+		},
+	}
+	for name, test := range suite {
+		t.Run(name, func(t *testing.T) {
+			got := stripHtmlTags(test.test)
+			if test.want != got {
+				t.Errorf("expected %q, got %q", test.want, got)
+			}
+		})
+	}
+}

@@ -43,22 +43,13 @@ func stripHtmlTags(raw string) string {
 	var out strings.Builder
 
 	var inTag bool
-	var tagStart int
-	for i, c := range src {
+	for _, c := range src {
 		if '<' == c {
 			inTag = true
-			tagStart = i
 			continue
 		}
 
-		if inTag && ' ' == c {
-			if isBlockTag(string(src[tagStart:i])) {
-				out.WriteByte('\n')
-			}
-			continue
-		}
-
-		if inTag && '>' == c {
+		if '>' == c {
 			inTag = false
 			continue
 		}
