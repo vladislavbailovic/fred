@@ -1,4 +1,4 @@
-package main
+package data
 
 import "testing"
 
@@ -53,7 +53,7 @@ func Test_stripHtmlTags(t *testing.T) {
 	}
 	for name, test := range suite {
 		t.Run(name, func(t *testing.T) {
-			got := stripHtmlTags(test.test)
+			got := StripHtmlTags(test.test)
 			if test.want != got {
 				t.Errorf("expected %q, got %q", test.want, got)
 			}
@@ -70,7 +70,7 @@ func Test_sanitizeCategory(t *testing.T) {
 	}
 	for test, expected := range suite {
 		t.Run(test, func(t *testing.T) {
-			actual := sanitizeCategory(test)
+			actual := SanitizeCategory(test)
 			if actual != expected {
 				t.Errorf("expected %q, got %q", expected, actual)
 			}

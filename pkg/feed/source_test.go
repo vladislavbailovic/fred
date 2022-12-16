@@ -1,20 +1,19 @@
-package main
+package feed
 
 import (
-	"fmt"
+	"fred/internal"
+	"fred/pkg/data"
 	"net/url"
-	"os"
-	"path/filepath"
 	"strings"
 	"testing"
 	"time"
 )
 
-func Test_parse_Atom(t *testing.T) {
+func Test_Parse_Atom(t *testing.T) {
 	source := &Source{}
-	buffer := GetTestFile("atom.xml")
+	buffer := internal.GetTestFile("atom.xml")
 
-	if err := source.parse(buffer); err != nil {
+	if err := source.Parse(buffer); err != nil {
 		t.Error(err)
 	}
 	if len(source.Articles) != 10 {
@@ -26,11 +25,11 @@ func Test_parse_Atom(t *testing.T) {
 	}
 }
 
-func Test_parse_RSS(t *testing.T) {
+func Test_Parse_RSS(t *testing.T) {
 	source := &Source{}
-	buffer := GetTestFile("rss.xml")
+	buffer := internal.GetTestFile("rss.xml")
 
-	if err := source.parse(buffer); err != nil {
+	if err := source.Parse(buffer); err != nil {
 		t.Error(err)
 	}
 	if len(source.Articles) != 20 {
@@ -42,7 +41,7 @@ func Test_parse_RSS(t *testing.T) {
 	}
 }
 
-func validateArticle(a Article, t *testing.T) {
+func validateArticle(a data.Article, t *testing.T) {
 	if a.Title == "" {
 		t.Error("expected article to have a title")
 	}
@@ -68,7 +67,7 @@ func validateArticle(a Article, t *testing.T) {
 		t.Log(a.Title, "\n", a.Brief, "\n")
 	}
 
-	if !a.Date.ts.Before(time.Now().Add(-24 * time.Hour)) {
+	if !a.Date.Before(time.Now().Add(-24 * time.Hour)) {
 		t.Errorf("expected valid date: %q", a.Date.String())
 	}
 
@@ -78,24 +77,4 @@ func validateArticle(a Article, t *testing.T) {
 	if a.Origin.Link == nil {
 		t.Error("expected origin URL")
 	}
-}
-
-func GetTestFilePath(relpath string) string {
-	cwd, err := os.Getwd()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "error loading test file: %v", err)
-		return ""
-	}
-	pth := filepath.Join(cwd, "testdata", relpath)
-	return pth
-}
-
-func GetTestFile(relpath string) []byte {
-	pth := GetTestFilePath(relpath)
-	buffer, err := os.ReadFile(pth)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "no such test file: %s: %v", pth, err)
-		return []byte{}
-	}
-	return buffer
 }

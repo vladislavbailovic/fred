@@ -1,7 +1,8 @@
-package main
+package feed
 
 import (
 	"encoding/xml"
+	"fred/pkg/data"
 	"net/url"
 )
 
@@ -27,24 +28,24 @@ func (e *Item) GetCategories() []string {
 		if "" == c {
 			continue
 		}
-		categories = append(categories, sanitizeCategory(c))
+		categories = append(categories, data.SanitizeCategory(c))
 	}
 	return categories
 }
 
-func (x *RSS) GetArticles() []Article {
-	origin := Origin{Title: x.Title}
+func (x *RSS) GetArticles() []data.Article {
+	origin := data.Origin{Title: x.Title}
 	if lnk, err := url.Parse(x.Link); err == nil {
 		origin.Link = lnk
 	}
-	articles := make([]Article, 0, len(x.Items))
+	articles := make([]data.Article, 0, len(x.Items))
 	for _, e := range x.Items {
-		articles = append(articles, Article{
+		articles = append(articles, data.Article{
 			Title:  e.Title,
 			Link:   e.Link,
 			Topics: e.GetCategories(),
-			Brief:  stripHtmlTags(e.Description),
-			Date:   ParseDate(e.PubDate),
+			Brief:  data.StripHtmlTags(e.Description),
+			Date:   data.ParseDate(e.PubDate),
 			Origin: origin,
 		})
 	}
@@ -80,19 +81,19 @@ type Raw struct {
 	Raw string `xml:",innerxml"`
 }
 
-func (x *Atom) GetArticles() []Article {
-	origin := Origin{Title: x.Title}
+func (x *Atom) GetArticles() []data.Article {
+	origin := data.Origin{Title: x.Title}
 	if lnk, err := url.Parse(x.Link.Href); err == nil {
 		origin.Link = lnk
 	}
-	articles := make([]Article, 0, len(x.Entries))
+	articles := make([]data.Article, 0, len(x.Entries))
 	for _, e := range x.Entries {
-		articles = append(articles, Article{
+		articles = append(articles, data.Article{
 			Title:  e.Title,
 			Link:   e.Link.Href,
 			Topics: e.GetCategories(),
 			Brief:  e.GetBrief(),
-			Date:   ParseDate(e.Published),
+			Date:   data.ParseDate(e.Published),
 			Origin: origin,
 		})
 	}
@@ -105,7 +106,7 @@ func (e *Entry) GetCategories() []string {
 		if "" == c.Term {
 			continue
 		}
-		categories = append(categories, sanitizeCategory(c.Term))
+		categories = append(categories, data.SanitizeCategory(c.Term))
 	}
 	return categories
 }
@@ -117,5 +118,5 @@ func (e *Entry) GetBrief() string {
 	} else {
 		brief = e.Content
 	}
-	return stripHtmlTags(brief)
+	return data.StripHtmlTags(brief)
 }

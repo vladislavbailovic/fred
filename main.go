@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"fred/internal"
+	"fred/pkg/feed"
 	"strings"
 )
 
@@ -9,13 +11,13 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	out := ConsolePrinter{}
+	out := internal.ConsolePrinter{}
 	result := getSources(ctx, out)
 
 	render(result, out)
 }
 
-func render(result []*Source, printer Printer) {
+func render(result []*feed.Source, printer internal.Printer) {
 	var out strings.Builder
 	for _, r := range result {
 		for _, src := range r.Articles {
@@ -46,9 +48,9 @@ func render(result []*Source, printer Printer) {
 	printer.Debug(out.String())
 }
 
-func getSources(ctx context.Context, out Printer) []*Source {
-	rsp := make(chan *Source)
-	result := make([]*Source, 0, len(urls))
+func getSources(ctx context.Context, out internal.Printer) []*feed.Source {
+	rsp := make(chan *feed.Source)
+	result := make([]*feed.Source, 0, len(urls))
 	done := 0
 
 	for _, url := range urls {
@@ -73,9 +75,9 @@ func getSources(ctx context.Context, out Printer) []*Source {
 	return result
 }
 
-func getSource(ctx context.Context, raw string, resp chan *Source, out Printer) {
-	printer := ConsolePrinter{}
-	src := NewSource(raw, printer)
+func getSource(ctx context.Context, raw string, resp chan *feed.Source, out internal.Printer) {
+	printer := internal.ConsolePrinter{}
+	src := feed.NewSource(raw, printer)
 	if src != nil { // can be nil pointer
 		src.Load(ctx, printer)
 	}

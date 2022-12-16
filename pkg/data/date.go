@@ -1,4 +1,4 @@
-package main
+package data
 
 import (
 	"time"
@@ -24,6 +24,10 @@ type Date struct {
 
 func (x *Date) String() string {
 	return x.ts.Format("2006-01-02T15:04:05")
+}
+
+func (x *Date) Before(d time.Time) bool {
+	return x.ts.Before(d)
 }
 
 func ParseDate(raw string) Date {

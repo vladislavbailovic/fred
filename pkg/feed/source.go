@@ -1,8 +1,10 @@
-package main
+package feed
 
 import (
 	"context"
 	"encoding/xml"
+	"fred/internal"
+	"fred/pkg/data"
 	"io"
 	"net/http"
 	"net/url"
@@ -13,10 +15,10 @@ var RequestTimeout time.Duration = 5
 
 type Source struct {
 	URL      *url.URL
-	Articles []Article
+	Articles []data.Article
 }
 
-func NewSource(rawUrl string, out Printer) *Source {
+func NewSource(rawUrl string, out internal.Printer) *Source {
 	url, err := url.Parse(rawUrl)
 	if err != nil {
 		out.Error(err, "parsing raw URL")
@@ -25,7 +27,7 @@ func NewSource(rawUrl string, out Printer) *Source {
 	return &Source{URL: url}
 }
 
-func (x *Source) Load(ctx context.Context, out Printer) {
+func (x *Source) Load(ctx context.Context, out internal.Printer) {
 	ctx, cancel := context.WithTimeout(ctx, time.Second*RequestTimeout)
 	defer cancel()
 
@@ -54,12 +56,12 @@ func (x *Source) Load(ctx context.Context, out Printer) {
 		return
 	}
 
-	if err := x.parse(buffer); err != nil {
+	if err := x.Parse(buffer); err != nil {
 		out.Error(err, "unmarshaling feed XML: %s", x.URL)
 	}
 }
 
-func (x *Source) parse(buffer []byte) error {
+func (x *Source) Parse(buffer []byte) error {
 	r := RSS{}
 	if rssErr := xml.Unmarshal(buffer, &r); rssErr != nil {
 		f := Atom{}

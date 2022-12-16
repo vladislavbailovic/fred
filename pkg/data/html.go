@@ -1,4 +1,4 @@
-package main
+package data
 
 import (
 	"strings"
@@ -41,7 +41,7 @@ func isBlockTag(which string) bool {
 	return false
 }
 
-func stripHtmlTags(raw string) string {
+func StripHtmlTags(raw string) string {
 	src := []rune(raw)
 	var out strings.Builder
 
@@ -65,7 +65,7 @@ func stripHtmlTags(raw string) string {
 	return out.String()
 }
 
-func sanitizeCategory(raw string) string {
+func SanitizeCategory(raw string) string {
 	replaced := false
 	var out strings.Builder
 	out.Grow(len(raw))
