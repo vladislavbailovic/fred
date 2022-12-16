@@ -63,8 +63,10 @@ func Test_stripHtmlTags(t *testing.T) {
 
 func Test_sanitizeCategory(t *testing.T) {
 	suite := map[string]string{
-		"AWS Lambda": "aws-lambda",
-		"test-test":  "test-test",
+		"AWS Lambda":                  "aws-lambda",
+		"A weird thing (with braces)": "a-weird-thing-with-braces",
+		"Something & The other thing": "something-the-other-thing",
+		"test-test":                   "test-test",
 	}
 	for test, expected := range suite {
 		t.Run(test, func(t *testing.T) {

@@ -66,11 +66,21 @@ func stripHtmlTags(raw string) string {
 }
 
 func sanitizeCategory(raw string) string {
-	return strings.ToLower(
-		strings.Map(func(r rune) rune {
-			if unicode.IsLetter(r) || unicode.IsNumber(r) || '-' == r {
-				return r
+	replaced := false
+	var out strings.Builder
+	out.Grow(len(raw))
+	for _, c := range strings.ToLower(raw) {
+		if unicode.IsLetter(c) || unicode.IsNumber(c) || '-' == c {
+			out.WriteRune(c)
+			if replaced {
+				replaced = false
 			}
-			return '-'
-		}, raw))
+		} else {
+			if !replaced {
+				out.WriteByte('-')
+				replaced = true
+			}
+		}
+	}
+	return strings.Trim(out.String(), "-")
 }

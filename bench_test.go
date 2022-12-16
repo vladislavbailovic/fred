@@ -17,3 +17,9 @@ func Benchmark_Render(b *testing.B) {
 		render(sources, out)
 	}
 }
+
+func Benchmark_SanitizeCategory(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		sanitizeCategory("A weird thing (with braces)")
+	}
+}
