@@ -41,7 +41,7 @@ func renderSource(src *feed.Source, printer internal.Printer) {
 
 		out.WriteByte('\n')
 	}
-	printer.Debug(out.String())
+	printer.Out(out.String())
 }
 
 func printSources(ctx context.Context, out internal.Printer) {

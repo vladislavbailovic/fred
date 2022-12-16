@@ -21,3 +21,7 @@ func (x ConsolePrinter) Debug(msg string, rest ...interface{}) {
 	fmt.Fprintf(os.Stdout, "[DEBUG]:\n\t%s\n",
 		fmt.Sprintf(msg, rest...))
 }
+
+func (x ConsolePrinter) Out(msg string, rest ...interface{}) {
+	fmt.Fprintf(os.Stdout, fmt.Sprintf(msg, rest...))
+}
