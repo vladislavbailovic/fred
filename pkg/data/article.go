@@ -2,6 +2,10 @@ package data
 
 import "net/url"
 
+type Feed interface {
+	GetArticles() []Article
+}
+
 type Article interface {
 	GetTitle() string
 	GetDate() *Date

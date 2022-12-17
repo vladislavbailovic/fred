@@ -14,8 +14,8 @@ import (
 var RequestTimeout time.Duration = 5
 
 type Source struct {
-	URL      *url.URL
-	Articles []data.Article
+	URL  *url.URL
+	Feed data.Feed
 }
 
 func NewSource(rawUrl string, out internal.Printer) *Source {
@@ -68,10 +68,10 @@ func (x *Source) Parse(buffer []byte) error {
 		if atomErr := xml.Unmarshal(buffer, &f); atomErr != nil {
 			return atomErr
 		} else {
-			x.Articles = f.GetArticles()
+			x.Feed = &f
 		}
 	} else {
-		x.Articles = r.GetArticles()
+		x.Feed = &r
 	}
 
 	return nil

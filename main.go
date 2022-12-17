@@ -20,7 +20,7 @@ func main() {
 func render(result []*feed.Source, printer internal.Printer) {
 	var out strings.Builder
 	for _, r := range result {
-		for _, src := range r.Articles {
+		for _, src := range r.Feed.GetArticles() {
 			out.Grow(len(src.GetTitle()) + len(src.GetLink()) + len(src.GetBrief()) + 7)
 			out.WriteByte('[')
 			out.WriteString(src.GetTitle())

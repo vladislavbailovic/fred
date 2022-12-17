@@ -16,11 +16,11 @@ func Test_Parse_Atom(t *testing.T) {
 	if err := source.Parse(buffer); err != nil {
 		t.Error(err)
 	}
-	if len(source.Articles) != 10 {
-		t.Errorf("invalid articles count: %d", len(source.Articles))
+	if len(source.Feed.GetArticles()) != 10 {
+		t.Errorf("invalid articles count: %d", len(source.Feed.GetArticles()))
 	}
 
-	for _, a := range source.Articles {
+	for _, a := range source.Feed.GetArticles() {
 		validateArticle(a, t)
 	}
 }
@@ -32,11 +32,11 @@ func Test_Parse_RSS(t *testing.T) {
 	if err := source.Parse(buffer); err != nil {
 		t.Error(err)
 	}
-	if len(source.Articles) != 20 {
-		t.Errorf("invalid articles count: %d", len(source.Articles))
+	if len(source.Feed.GetArticles()) != 20 {
+		t.Errorf("invalid articles count: %d", len(source.Feed.GetArticles()))
 	}
 
-	for _, a := range source.Articles {
+	for _, a := range source.Feed.GetArticles() {
 		validateArticle(a, t)
 	}
 }

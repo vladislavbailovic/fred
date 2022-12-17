@@ -17,7 +17,7 @@ func main() {
 
 func renderSource(src *feed.Source, printer internal.Printer) {
 	var out strings.Builder
-	for _, src := range src.Articles {
+	for _, src := range src.Feed.GetArticles() {
 		title := src.GetTitle()
 		link := src.GetLink()
 		brief := src.GetBrief()
