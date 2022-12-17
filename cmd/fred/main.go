@@ -18,25 +18,30 @@ func main() {
 func renderSource(src *feed.Source, printer internal.Printer) {
 	var out strings.Builder
 	for _, src := range src.Articles {
-		out.Grow(len(src.GetTitle()) + len(src.GetLink()) + len(src.GetBrief()) + 7)
+		title := src.GetTitle()
+		link := src.GetLink()
+		brief := src.GetBrief()
+		topics := src.GetTopics()
+
+		out.Grow(len(title) + len(link) + len(brief) + 7)
 		out.WriteByte('[')
-		out.WriteString(src.GetTitle())
+		out.WriteString(title)
 		out.WriteByte(']')
 		out.WriteByte('(')
-		out.WriteString(src.GetLink())
+		out.WriteString(link)
 		out.WriteByte(')')
 
 		if len(src.GetTopics()) > 0 {
-			topics := strings.Join(src.GetTopics(), ":")
-			out.Grow(len(topics) + 3)
+			topicsStr := strings.Join(topics, ":")
+			out.Grow(len(topicsStr) + 3)
 			out.WriteByte(' ')
 			out.WriteByte(':')
-			out.WriteString(topics)
+			out.WriteString(topicsStr)
 			out.WriteByte(':')
 		}
 		out.WriteByte('\n')
 
-		out.WriteString(src.GetBrief())
+		out.WriteString(brief)
 		out.WriteByte('\n')
 
 		out.WriteByte('\n')
