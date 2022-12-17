@@ -10,7 +10,7 @@ type Atom struct {
 	XMLName xml.Name `xml:"feed"`
 	Title   string   `xml:"title"`
 	Link    Link     `xml:"link"`
-	Entries []Entry  `xml:"entry"`
+	Entries []*Entry `xml:"entry"`
 }
 
 type Entry struct {
@@ -55,7 +55,7 @@ func (x *Atom) GetArticles() []data.Article {
 		e := a
 		e.origin = origin
 		e.date = data.ParseDate(e.Published)
-		articles = append(articles, &e)
+		articles = append(articles, e)
 	}
 	return articles
 }

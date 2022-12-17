@@ -10,7 +10,7 @@ type RSS struct {
 	XMLName xml.Name `xml:"rss">"channel"` // TODO: what the actual fuck?
 	Title   string   `xml:"channel>title"`
 	Link    string   `xml:"channel>link"`
-	Items   []Item   `xml:"channel>item"`
+	Items   []*Item  `xml:"channel>item"`
 }
 
 type Item struct {
@@ -53,7 +53,7 @@ func (x *RSS) GetArticles() []data.Article {
 		e := a
 		e.origin = origin
 		e.date = data.ParseDate(e.PubDate)
-		articles = append(articles, &e)
+		articles = append(articles, e)
 	}
 	return articles
 }
