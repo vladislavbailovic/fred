@@ -12,8 +12,7 @@ func Benchmark_Render(b *testing.B) {
 		&feed.Source{},
 		&feed.Source{},
 	}
-	out := &ConsolePrinter{}
-	PrintDebug = false
+	out := &internal.NullPrinter{}
 
 	sources[0].Parse(internal.GetTestFile("atom.xml"))
 	sources[1].Parse(internal.GetTestFile("rss.xml"))
@@ -27,5 +26,20 @@ func Benchmark_Render(b *testing.B) {
 func Benchmark_SanitizeCategory(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		data.SanitizeCategory("A weird thing (with braces)")
+	}
+}
+
+func Benchmark_Parse_Atom(b *testing.B) {
+	source := &feed.Source{}
+	for i := 0; i < b.N; i++ {
+		source.Parse(internal.GetTestFile("atom.xml"))
+
+	}
+}
+
+func Benchmark_Parse_RSS(b *testing.B) {
+	source := &feed.Source{}
+	for i := 0; i < b.N; i++ {
+		source.Parse(internal.GetTestFile("rss.xml"))
 	}
 }

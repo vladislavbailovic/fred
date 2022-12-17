@@ -11,7 +11,7 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	out := NullPrinter{}
+	out := internal.NullPrinter{}
 	result := getSources(ctx, out)
 
 	render(result, out)
@@ -99,9 +99,3 @@ var urls []string = []string{
 	// "https://scene-si.org/index.xml",
 	// "https://utcc.utoronto.ca/~cks/space/blog/?atom",
 }
-
-type NullPrinter struct{}
-
-func (x NullPrinter) Error(err error, msg string, rest ...interface{}) { return }
-func (x NullPrinter) Debug(msg string, rest ...interface{})            { return }
-func (x NullPrinter) Out(msg string, rest ...interface{})              { return }

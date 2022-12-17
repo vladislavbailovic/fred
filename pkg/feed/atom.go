@@ -55,6 +55,7 @@ func (x *Atom) GetArticles() []data.Article {
 	return articles
 }
 
+// TODO: fallback to categories detection from the title
 func (e *Entry) GetCategories() []string {
 	categories := make([]string, 0, len(e.Categories))
 	for _, c := range e.Categories {
@@ -73,5 +74,8 @@ func (e *Entry) GetBrief() string {
 	} else {
 		brief = e.Content
 	}
+	// TODO: process HTML entities
+	// TODO: strip newlines surrounding the brief
+	// TODO: lodash escape somehow
 	return data.StripHtmlTags(brief)
 }
