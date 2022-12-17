@@ -79,6 +79,5 @@ func (e *Entry) GetBrief() string {
 	} else {
 		brief = e.Content
 	}
-	// TODO: strip newlines surrounding the brief
 	return data.StripHtmlTags(brief)
 }
