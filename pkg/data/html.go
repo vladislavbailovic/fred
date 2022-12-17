@@ -1,6 +1,7 @@
 package data
 
 import (
+	"html"
 	"strings"
 	"unicode"
 )
@@ -62,7 +63,7 @@ func StripHtmlTags(raw string) string {
 		}
 	}
 
-	return strings.ReplaceAll(out.String(), "_", "`_`")
+	return html.UnescapeString(strings.ReplaceAll(out.String(), "_", "`_`"))
 }
 
 func SanitizeCategory(raw string) string {
