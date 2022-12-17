@@ -20,7 +20,17 @@ type Item struct {
 	Description string   `xml:"description"`
 	Categories  []string `xml:"category"`
 	PubDate     string   `xml:"pubDate"`
+
+	date   data.Date   `xml:"-"`
+	origin data.Origin `xml:"-"`
 }
+
+func (x *Item) GetTitle() string       { return x.Title }
+func (x *Item) GetLink() string        { return x.Link }
+func (x *Item) GetBrief() string       { return data.StripHtmlTags(x.Description) }
+func (x *Item) GetTopics() []string    { return x.GetCategories() }
+func (x *Item) GetDate() data.Date     { return x.date }
+func (x *Item) GetOrigin() data.Origin { return x.origin }
 
 func (e *Item) GetCategories() []string {
 	categories := make([]string, 0, len(e.Categories))
@@ -40,14 +50,8 @@ func (x *RSS) GetArticles() []data.Article {
 	}
 	articles := make([]data.Article, 0, len(x.Items))
 	for _, e := range x.Items {
-		articles = append(articles, data.Article{
-			Title:  e.Title,
-			Link:   e.Link,
-			Topics: e.GetCategories(),
-			Brief:  data.StripHtmlTags(e.Description),
-			Date:   data.ParseDate(e.PubDate),
-			Origin: origin,
-		})
+		e.origin = origin
+		e.date = data.ParseDate(e.PubDate)
 	}
 	return articles
 }

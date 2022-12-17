@@ -21,16 +21,16 @@ func render(result []*feed.Source, printer internal.Printer) {
 	var out strings.Builder
 	for _, r := range result {
 		for _, src := range r.Articles {
-			out.Grow(len(src.Title) + len(src.Link) + len(src.Brief) + 7)
+			out.Grow(len(src.GetTitle()) + len(src.GetLink()) + len(src.GetBrief()) + 7)
 			out.WriteByte('[')
-			out.WriteString(src.Title)
+			out.WriteString(src.GetTitle())
 			out.WriteByte(']')
 			out.WriteByte('(')
-			out.WriteString(src.Link)
+			out.WriteString(src.GetLink())
 			out.WriteByte(')')
 
-			if len(src.Topics) > 0 {
-				topics := strings.Join(src.Topics, ":")
+			if len(src.GetTopics()) > 0 {
+				topics := strings.Join(src.GetTopics(), ":")
 				out.Grow(len(topics) + 3)
 				out.WriteByte(' ')
 				out.WriteByte(':')
@@ -39,7 +39,7 @@ func render(result []*feed.Source, printer internal.Printer) {
 			}
 			out.WriteByte('\n')
 
-			out.WriteString(src.Brief)
+			out.WriteString(src.GetBrief())
 			out.WriteByte('\n')
 
 			out.WriteByte('\n')

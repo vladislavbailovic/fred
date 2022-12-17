@@ -21,7 +21,16 @@ type Entry struct {
 	Summary    string     `xml:"summary"`
 	Published  string     `xml:"published"`
 	Categories []Category `xml:"category"`
+
+	date   data.Date   `xml:"-"`
+	origin data.Origin `xml:"-"`
 }
+
+func (x *Entry) GetTitle() string       { return x.Title }
+func (x *Entry) GetLink() string        { return x.Link.Href }
+func (x *Entry) GetTopics() []string    { return x.GetCategories() }
+func (x *Entry) GetDate() data.Date     { return x.date }
+func (x *Entry) GetOrigin() data.Origin { return x.origin }
 
 type Link struct {
 	Href string `xml:"href,attr"`
@@ -43,14 +52,8 @@ func (x *Atom) GetArticles() []data.Article {
 	}
 	articles := make([]data.Article, 0, len(x.Entries))
 	for _, e := range x.Entries {
-		articles = append(articles, data.Article{
-			Title:  e.Title,
-			Link:   e.Link.Href,
-			Topics: e.GetCategories(),
-			Brief:  e.GetBrief(),
-			Date:   data.ParseDate(e.Published),
-			Origin: origin,
-		})
+		e.origin = origin
+		e.date = data.ParseDate(e.Published)
 	}
 	return articles
 }
