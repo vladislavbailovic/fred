@@ -60,8 +60,10 @@ func (x *Atom) GetArticles() []data.Article {
 	return articles
 }
 
-// TODO: fallback to categories detection from the title
 func (e *Entry) GetCategories() []string {
+	if len(e.Categories) < 1 {
+		return data.ExtractCategoriesFrom(e.Title)
+	}
 	categories := make([]string, 0, len(e.Categories))
 	for _, c := range e.Categories {
 		if "" == c.Term {

@@ -61,7 +61,7 @@ func Test_stripHtmlTags(t *testing.T) {
 	}
 }
 
-func Test_sanitizeCategory(t *testing.T) {
+func Test_SanitizeCategory(t *testing.T) {
 	suite := map[string]string{
 		"AWS Lambda":                  "aws-lambda",
 		"A weird thing (with braces)": "a-weird-thing-with-braces",
@@ -75,5 +75,21 @@ func Test_sanitizeCategory(t *testing.T) {
 				t.Errorf("expected %q, got %q", expected, actual)
 			}
 		})
+	}
+}
+
+func Test_isStopWord(t *testing.T) {
+	suite := map[string]bool{
+		"is":   true,
+		"your": true,
+		"my":   true,
+		"go":   false,
+		"aws":  false,
+	}
+	for test, want := range suite {
+		got := isStopWord(test)
+		if got != want {
+			t.Errorf("expected %q stopword status to be %v", test, want)
+		}
 	}
 }

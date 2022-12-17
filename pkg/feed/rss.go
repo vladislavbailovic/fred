@@ -33,6 +33,9 @@ func (x *Item) GetDate() *data.Date    { return x.date }
 func (x *Item) GetOrigin() data.Origin { return x.origin }
 
 func (e *Item) GetCategories() []string {
+	if len(e.Categories) < 1 {
+		return data.ExtractCategoriesFrom(e.Title)
+	}
 	categories := make([]string, 0, len(e.Categories))
 	for _, c := range e.Categories {
 		if "" == c {

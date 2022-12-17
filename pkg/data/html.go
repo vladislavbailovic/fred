@@ -87,3 +87,23 @@ func SanitizeCategory(raw string) string {
 	}
 	return strings.Trim(out.String(), "-")
 }
+
+func ExtractCategoriesFrom(src string) []string {
+	split := strings.Split(src, " ")
+	cats := make([]string, 0, len(split))
+	for _, s := range split {
+		term := SanitizeCategory(s)
+		if "" == term {
+			continue
+		}
+		if isStopWord(term) {
+			continue
+		}
+		cats = append(cats, term)
+	}
+	return cats
+}
+
+func isStopWord(what string) bool {
+	return stopWords[what]
+}
