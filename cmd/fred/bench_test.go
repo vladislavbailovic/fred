@@ -43,3 +43,19 @@ func Benchmark_Parse_RSS(b *testing.B) {
 		source.Parse(internal.GetTestFile("rss.xml"))
 	}
 }
+
+func Benchmark_ParseAndRender(b *testing.B) {
+	out := &internal.NullPrinter{}
+
+	for i := 0; i < b.N; i++ {
+		sources := []*feed.Source{
+			&feed.Source{},
+			&feed.Source{},
+		}
+		sources[0].Parse(internal.GetTestFile("atom.xml"))
+		sources[1].Parse(internal.GetTestFile("rss.xml"))
+
+		renderSource(sources[0], out)
+		renderSource(sources[1], out)
+	}
+}
