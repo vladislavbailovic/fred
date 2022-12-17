@@ -49,7 +49,8 @@ func (x *RSS) GetArticles() []data.Article {
 		origin.Link = lnk
 	}
 	articles := make([]data.Article, 0, len(x.Items))
-	for _, e := range x.Items {
+	for _, a := range x.Items {
+		e := a
 		e.origin = origin
 		e.date = data.ParseDate(e.PubDate)
 		articles = append(articles, &e)

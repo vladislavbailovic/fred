@@ -51,7 +51,8 @@ func (x *Atom) GetArticles() []data.Article {
 		origin.Link = lnk
 	}
 	articles := make([]data.Article, 0, len(x.Entries))
-	for _, e := range x.Entries {
+	for _, a := range x.Entries {
+		e := a
 		e.origin = origin
 		e.date = data.ParseDate(e.Published)
 		articles = append(articles, &e)
