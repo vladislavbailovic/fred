@@ -21,7 +21,7 @@ type Item struct {
 	Categories  []string `xml:"category"`
 	PubDate     string   `xml:"pubDate"`
 
-	date   data.Date   `xml:"-"`
+	date   *data.Date  `xml:"-"`
 	origin data.Origin `xml:"-"`
 }
 
@@ -29,7 +29,7 @@ func (x *Item) GetTitle() string       { return x.Title }
 func (x *Item) GetLink() string        { return x.Link }
 func (x *Item) GetBrief() string       { return data.StripHtmlTags(x.Description) }
 func (x *Item) GetTopics() []string    { return x.GetCategories() }
-func (x *Item) GetDate() data.Date     { return x.date }
+func (x *Item) GetDate() *data.Date    { return x.date }
 func (x *Item) GetOrigin() data.Origin { return x.origin }
 
 func (e *Item) GetCategories() []string {
@@ -52,6 +52,7 @@ func (x *RSS) GetArticles() []data.Article {
 	for _, e := range x.Items {
 		e.origin = origin
 		e.date = data.ParseDate(e.PubDate)
+		articles = append(articles, &e)
 	}
 	return articles
 }

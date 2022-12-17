@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"strings"
 	"testing"
+	"time"
 )
 
 func Test_Parse_Atom(t *testing.T) {
@@ -66,12 +67,9 @@ func validateArticle(a data.Article, t *testing.T) {
 		t.Log(a.GetTitle(), "\n", a.GetBrief(), "\n")
 	}
 
-	/*
-		// TODO: fix this
-		if !a.GetDate().Before(time.Now().Add(-24 * time.Hour)) {
-			t.Errorf("expected valid date: %q", a.GetDate().String())
-		}
-	*/
+	if !a.GetDate().Before(time.Now().Add(-24 * time.Hour)) {
+		t.Errorf("expected valid date: %q", a.GetDate().String())
+	}
 
 	if a.GetOrigin().Title == "" {
 		t.Error("expected origin title")

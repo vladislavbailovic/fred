@@ -22,14 +22,14 @@ type Entry struct {
 	Published  string     `xml:"published"`
 	Categories []Category `xml:"category"`
 
-	date   data.Date   `xml:"-"`
+	date   *data.Date  `xml:"-"`
 	origin data.Origin `xml:"-"`
 }
 
 func (x *Entry) GetTitle() string       { return x.Title }
 func (x *Entry) GetLink() string        { return x.Link.Href }
 func (x *Entry) GetTopics() []string    { return x.GetCategories() }
-func (x *Entry) GetDate() data.Date     { return x.date }
+func (x *Entry) GetDate() *data.Date    { return x.date }
 func (x *Entry) GetOrigin() data.Origin { return x.origin }
 
 type Link struct {
@@ -54,6 +54,7 @@ func (x *Atom) GetArticles() []data.Article {
 	for _, e := range x.Entries {
 		e.origin = origin
 		e.date = data.ParseDate(e.Published)
+		articles = append(articles, &e)
 	}
 	return articles
 }

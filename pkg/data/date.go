@@ -30,8 +30,8 @@ func (x *Date) Before(d time.Time) bool {
 	return x.ts.Before(d)
 }
 
-func ParseDate(raw string) Date {
-	return Date{ts: parseDate(raw)}
+func ParseDate(raw string) *Date {
+	return &Date{ts: parseDate(raw)}
 }
 
 func parseDate(raw string) time.Time {
