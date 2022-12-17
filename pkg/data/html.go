@@ -62,7 +62,7 @@ func StripHtmlTags(raw string) string {
 		}
 	}
 
-	return out.String()
+	return strings.ReplaceAll(out.String(), "_", "`_`")
 }
 
 func SanitizeCategory(raw string) string {

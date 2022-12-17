@@ -81,6 +81,5 @@ func (e *Entry) GetBrief() string {
 	}
 	// TODO: process HTML entities
 	// TODO: strip newlines surrounding the brief
-	// TODO: lodash escape somehow
 	return data.StripHtmlTags(brief)
 }
