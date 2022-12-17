@@ -16,6 +16,9 @@ func main() {
 }
 
 func renderSource(src *feed.Source, printer internal.Printer) {
+	if src.Feed == nil { // Feed can be nil pointer
+		return
+	}
 	var out strings.Builder
 	for _, src := range src.Feed.GetArticles() {
 		title := src.GetTitle()
