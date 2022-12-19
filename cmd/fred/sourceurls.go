@@ -1,0 +1,20 @@
+package main
+
+func getSourceUrls() []string {
+	return []string{
+		"https://aws.amazon.com/blogs/architecture/feed/",
+		"https://aws.amazon.com/blogs/compute/feed/",
+		"https://aws.amazon.com/blogs/containers/feed/",
+		"https://aws.amazon.com/blogs/security/feed/",
+		"https://aws.amazon.com/blogs/developer/feed/",
+		"https://aws.amazon.com/blogs/devops/feed/",
+		"https://appliedgo.net/index.xml",
+		"https://dave.cheney.net/feed",
+		"https://eli.thegreenplace.net/feeds/all.atom.xml",
+		"https://golangcode.com/index.xml",
+		"https://ieftimov.com/index.xml",
+		"https://research.swtch.com/feed.atom",
+		"https://scene-si.org/index.xml",
+		"https://utcc.utoronto.ca/~cks/space/blog/?atom",
+	}
+}
