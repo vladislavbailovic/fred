@@ -14,13 +14,18 @@ func main() {
 	opts := parseArgs(os.Args[1:])
 
 	out := ConsolePrinter{}
-	printSources(ctx, opts, out)
+	exitCode := printSources(ctx, opts, out)
+	os.Exit(exitCode)
 }
 
-func printSources(ctx context.Context, opts options, out internal.Printer) {
+func printSources(ctx context.Context, opts options, out internal.Printer) int {
 	rsp := make(chan *feed.Source)
 	done := 0
-	urls := getSourceUrls()
+	urls := getSourceUrls(out)
+
+	if len(urls) == 0 {
+		return 1
+	}
 
 	for _, url := range urls {
 		go getSource(ctx, url, rsp, out)
@@ -41,6 +46,8 @@ func printSources(ctx context.Context, opts options, out internal.Printer) {
 			break
 		}
 	}
+
+	return 0
 }
 
 func getSource(ctx context.Context, raw string, resp chan *feed.Source, out internal.Printer) {
