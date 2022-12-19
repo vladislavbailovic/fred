@@ -18,6 +18,7 @@ func main() {
 	os.Exit(exitCode)
 }
 
+// TODO if something goes wrong here, we hang. Not good.
 func printSources(ctx context.Context, opts options, out internal.Printer) int {
 	rsp := make(chan *feed.Source)
 	done := 0

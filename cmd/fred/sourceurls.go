@@ -9,6 +9,7 @@ import (
 )
 
 var configFileName string = ".fredrc"
+var configDir string
 
 func getSourceUrls(out internal.Printer) []string {
 	file, err := getConfigFile()
@@ -36,11 +37,16 @@ func getSourceUrls(out internal.Printer) []string {
 }
 
 func getConfigDir() (string, error) {
+	if configDir != "" {
+		return configDir, nil
+	}
 	if dir, err := os.UserConfigDir(); err == nil { // If all is well and we have standard config dir
+		configDir = dir
 		return dir, nil
 	}
 
 	if dir, err := os.UserHomeDir(); err == nil { // If all is well and we have standard config dir
+		configDir = dir
 		return dir, nil
 	}
 
