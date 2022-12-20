@@ -18,8 +18,8 @@ func Benchmark_Render(b *testing.B) {
 	sources[1].Parse(internal.GetTestFile("rss.xml"))
 
 	for i := 0; i < b.N; i++ {
-		renderSource(sources[0], out)
-		renderSource(sources[1], out)
+		renderSource(sources[0], options{}, out)
+		renderSource(sources[1], options{}, out)
 	}
 }
 
@@ -55,7 +55,7 @@ func Benchmark_ParseAndRender(b *testing.B) {
 		sources[0].Parse(internal.GetTestFile("atom.xml"))
 		sources[1].Parse(internal.GetTestFile("rss.xml"))
 
-		renderSource(sources[0], out)
-		renderSource(sources[1], out)
+		renderSource(sources[0], options{}, out)
+		renderSource(sources[1], options{}, out)
 	}
 }
