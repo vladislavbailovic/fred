@@ -65,7 +65,7 @@ func StripHtmlTags(raw string) string {
 
 	return strings.Trim(
 		html.UnescapeString(strings.ReplaceAll(out.String(), "_", "`_`")),
-		"\n\r")
+		" \t\n\r")
 }
 
 func SanitizeCategory(raw string) string {

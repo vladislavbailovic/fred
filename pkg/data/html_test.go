@@ -40,7 +40,7 @@ func Test_stripHtmlTags(t *testing.T) {
 		},
 		"random angle braces": {
 			test: "whatever > this < is >> a << test",
-			want: "whatever  this  a ",
+			want: "whatever  this  a",
 		},
 		"inline tags": {
 			test: "<b>whatever</b>! <i>New stuff here</i>",
@@ -91,5 +91,25 @@ func Test_isStopWord(t *testing.T) {
 		if got != want {
 			t.Errorf("expected %q stopword status to be %v", test, want)
 		}
+	}
+}
+
+func Test_TrimNewlines(t *testing.T) {
+	suite := map[string]string{
+		"lobsters": `<description>
+          
+            test
+        </description>`,
+		"start whitespace":    " test",
+		"start newline":       "\ntest",
+		"start tab and space": "\t test",
+	}
+	for name, test := range suite {
+		t.Run(name, func(t *testing.T) {
+			got := StripHtmlTags(test)
+			if "test" != got {
+				t.Errorf("unexpected result: %q", got)
+			}
+		})
 	}
 }
