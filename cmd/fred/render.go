@@ -24,7 +24,6 @@ func renderSource(src *feed.Source, opts options, printer internal.Printer) {
 		var topicsStr string
 		if len(src.GetTopics()) > 0 {
 			topicsStr = strings.Join(topics, ":")
-			out.Grow(len(topicsStr) + 3)
 		}
 		if len(opts.topics) > 0 {
 			skip := true
@@ -52,6 +51,8 @@ func renderSource(src *feed.Source, opts options, printer internal.Printer) {
 		out.WriteByte(')')
 
 		if len(topicsStr) > 0 {
+			out.Grow(len(topicsStr) + 3)
+
 			out.WriteByte(' ')
 			out.WriteByte(':')
 			out.WriteString(topicsStr)
