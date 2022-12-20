@@ -18,6 +18,7 @@ This will fetch feeds from the [config file](#config-file), output last 2 days' 
 	- [Running](#running)
 	- [Testing](#testing)
 	- [Config file](#config-file)
+	- [Usage](#usage)
 
 
 ## Quick Start
@@ -47,3 +48,12 @@ $ go test ./...
 ### Config file
 
 The feeds will be fetched from the list in config file. At the moment, the config file is essentially just a newline-separated list of URLs. See [testdata/fredrc](testdata/fredrc) for an example.
+
+
+### Usage
+
+Aside from limiting output to `N` number of days, it is also possible to scope the displayed topics to a subset of categories using `-t`/`--topic` CLI flag. Multiple topics can be added, and the articles tagged with any of the provided topics will be listed.
+
+Note: articles that don't have any categories in the feed will have topics assigned by parsing the article title.
+
+Tip: the topics filter will be applied _after_ the topics have been processed into their final string form - meaning, a more advanced matching is possible by including the separator (`:`). This is handy for short topics (e.g. `:go:`).
