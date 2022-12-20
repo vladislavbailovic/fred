@@ -19,6 +19,7 @@ func (x *topics) Set(value string) error {
 type options struct {
 	topics topics
 	days   int
+	read   bool
 }
 
 func parseArgs(args []string) options {
@@ -32,6 +33,10 @@ func parseArgs(args []string) options {
 	set.IntVar(&days, "days", 0, "Last however many days")
 	set.IntVar(&days, "d", 0, "Last however many days")
 
+	var read bool
+	set.BoolVar(&read, "read", false, "Also open up in vim for consuming")
+	set.BoolVar(&read, "r", false, "Also open up in vim for consuming")
+
 	set.Parse(args)
-	return options{topics: list, days: days}
+	return options{topics: list, days: days, read: read}
 }

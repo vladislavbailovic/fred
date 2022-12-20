@@ -5,6 +5,7 @@ import (
 	"fred/internal"
 	"fred/pkg/feed"
 	"os"
+	"os/exec"
 )
 
 func main() {
@@ -13,8 +14,38 @@ func main() {
 
 	opts := parseArgs(os.Args[1:])
 
-	out := NewConsolePrinter()
+	var out internal.Printer
+	out = NewConsolePrinter()
+
+	var fname string
+	if opts.read {
+		if tmp, err := NewTempFilePrinter(); err != nil {
+			out.Error(err, "unable to use %q as output, using std(out|err) instead", tmp.filename)
+		} else {
+			out = tmp
+			fname = tmp.filename
+		}
+		// fname := "internal"
+		// if tmp, err := NewFilePrinter(fname); err != nil {
+		// 	out.Error(err, "unable to use %q as output, using std(out|err) instead", fname)
+		// } else {
+		// 	out = tmp
+		// }
+	}
 	exitCode := printSources(ctx, opts, out)
+
+	if exitCode == 0 && opts.read && fname != "" {
+		cmd := exec.Command("vim", fname)
+		cmd.Stdin = os.Stdin
+		cmd.Stdout = os.Stdout
+		if err := cmd.Start(); err != nil {
+			exitCode = 13
+		}
+		if err := cmd.Wait(); err != nil {
+			exitCode = 12
+		}
+	}
+
 	out.Done()
 	os.Exit(exitCode)
 }

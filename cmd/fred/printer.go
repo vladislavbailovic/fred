@@ -2,7 +2,11 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"os"
+	"path/filepath"
+	"strings"
+	"time"
 )
 
 var PrintDebug bool = true
@@ -33,6 +37,8 @@ type FilePrinter struct {
 	filename string
 }
 
+func (x *FilePrinter) Done() { x.fp.Close() }
+
 func NewFilePrinter(filename string) (*FilePrinter, error) {
 	fp, err := os.OpenFile(filename, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0666)
 	if err != nil {
@@ -41,7 +47,29 @@ func NewFilePrinter(filename string) (*FilePrinter, error) {
 	return &FilePrinter{filename: filename, StreamPrinter: StreamPrinter{fp: fp}}, nil
 }
 
-func (x *FilePrinter) Done() { x.fp.Close() }
+type TempFilePrinter struct{ FilePrinter }
+
+func NewTempFilePrinter() (*TempFilePrinter, error) {
+	rand.Seed(time.Now().UnixNano())
+	size := 16
+	letters := "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuWwXxYyZz"
+	var filename strings.Builder
+	filename.Grow(size)
+	for i := 0; i < size; i++ {
+		filename.WriteByte(letters[rand.Intn(len(letters))])
+	}
+	filename.WriteString(".md")
+	fp, err := NewFilePrinter(filepath.Join(os.TempDir(), filename.String()))
+	if err != nil {
+		return nil, err
+	}
+	return &TempFilePrinter{FilePrinter: *fp}, nil
+}
+
+func (x *TempFilePrinter) Done() {
+	defer os.RemoveAll(x.filename)
+	x.fp.Close()
+}
 
 type ConsolePrinter struct {
 	out *StreamPrinter
