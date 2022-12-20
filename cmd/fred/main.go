@@ -13,8 +13,9 @@ func main() {
 
 	opts := parseArgs(os.Args[1:])
 
-	out := ConsolePrinter{}
+	out := NewConsolePrinter()
 	exitCode := printSources(ctx, opts, out)
+	out.Done()
 	os.Exit(exitCode)
 }
 
