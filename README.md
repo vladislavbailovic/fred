@@ -46,4 +46,4 @@ $ go test ./...
 
 ### Config file
 
-The feeds will be fetched from the list in config file. At the moment, the config file is essentially just a newline-separated list of URLs. See [testdata/fredrc](blob/main/testdata/fredrc) for an example.
+The feeds will be fetched from the list in config file. At the moment, the config file is essentially just a newline-separated list of URLs. See [testdata/fredrc](testdata/fredrc) for an example.
