@@ -20,6 +20,7 @@ type options struct {
 	topics topics
 	days   int
 	read   bool
+	fname  string
 }
 
 func parseArgs(args []string) options {
@@ -37,6 +38,10 @@ func parseArgs(args []string) options {
 	set.BoolVar(&read, "read", false, "Also open up in vim for consuming")
 	set.BoolVar(&read, "r", false, "Also open up in vim for consuming")
 
+	var fname string
+	set.StringVar(&fname, "out", "", "Output to this file instead")
+	set.StringVar(&fname, "o", "", "Output to this file instead")
+
 	set.Parse(args)
-	return options{topics: list, days: days, read: read}
+	return options{topics: list, days: days, read: read, fname: fname}
 }

@@ -19,18 +19,21 @@ func main() {
 
 	var fname string
 	if opts.read {
-		if tmp, err := NewTempFilePrinter(); err != nil {
-			out.Error(err, "unable to use %q as output, using std(out|err) instead", tmp.filename)
+		if opts.fname == "" {
+			if tmp, err := NewTempFilePrinter(); err != nil {
+				out.Error(err, "unable to use %q as output, using std(out|err) instead", tmp.filename)
+			} else {
+				out = tmp
+				fname = tmp.filename
+			}
 		} else {
-			out = tmp
-			fname = tmp.filename
+			fname = opts.fname
+			if tmp, err := NewFilePrinter(fname); err != nil {
+				out.Error(err, "unable to use %q as output, using std(out|err) instead", fname)
+			} else {
+				out = tmp
+			}
 		}
-		// fname := "internal"
-		// if tmp, err := NewFilePrinter(fname); err != nil {
-		// 	out.Error(err, "unable to use %q as output, using std(out|err) instead", fname)
-		// } else {
-		// 	out = tmp
-		// }
 	}
 	exitCode := printSources(ctx, opts, out)
 
