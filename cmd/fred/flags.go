@@ -24,7 +24,7 @@ type options struct {
 }
 
 func parseArgs(args []string) options {
-	set := flag.NewFlagSet("options", flag.ContinueOnError)
+	set := flag.NewFlagSet("options", flag.ExitOnError)
 
 	var list topics
 	set.Var(&list, "topic", "Topic to focus on (accumulated by repeating)")
